@@ -20,8 +20,8 @@ namespace DataPoints.Function {
             var entityId = new EntityId (nameof (Counter1), "myCounter1");
 
             // Synchronous call to the entity which returns a value
-          //  int currentValue = await context.CallEntityAsync<int> (entityId, "Get");
-           var currentValue=1;
+           int currentValue = await context.CallEntityAsync<int> (entityId, "Get");
+          
             if (currentValue < 10) {
                 // Asynchronous call which updates the value
             //  await context.CallEntityAsync<int>(entityId,"Add",1);
