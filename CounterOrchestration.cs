@@ -30,10 +30,16 @@ namespace DataPoints.Function {
       public class Entity {
 
         [FunctionName ("Entity")]
-        public static void Counter ([EntityTrigger] IDurableEntityContext ctx) {
-                  var currentValue = ctx.GetState<int>();
+        public static void Counter ([EntityTrigger] IDurableEntityContext ctx)
+            {
+                int initState = System.Convert.ToInt32(((JValue)((JProperty)(ctx.GetState<JObject>()).First).Value).Value);
 
-             switch (ctx.OperationName.ToLowerInvariant ()) {
+                ctx.SetState(initState);
+                // var y = ctx.GetState<int>();
+            
+                      var currentValue = ctx.GetState<int>();
+              
+                 switch (ctx.OperationName.ToLowerInvariant ()) {
             case "add":
               int amount = ctx.GetInput<int> ();
               currentValue += amount;
