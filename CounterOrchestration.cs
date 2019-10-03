@@ -17,6 +17,7 @@ namespace DataPoints.Function
         public static async Task<int> RunOrchestartor(
           [OrchestrationTrigger] IDurableOrchestrationContext context)
         {
+           // string output;
             var entityId = new EntityId(nameof(Counter), "key");
             var currentValue = await context.CallEntityAsync<int>(entityId, "Get");
             if (currentValue < 10)
@@ -25,7 +26,9 @@ namespace DataPoints.Function
                 context.SignalEntity(entityId, "Add", 1);
             }
             var finalValue= await context.CallEntityAsync<int>(entityId, "Get");
-           return finalValue;
+            //return $"{finalValue}";
+            //return output;
+            return finalValue;
            
 
         }
