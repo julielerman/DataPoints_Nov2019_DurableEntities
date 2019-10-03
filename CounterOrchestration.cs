@@ -19,12 +19,12 @@ namespace DataPoints.Function
         {
            // string output;
             var entityId = new EntityId(nameof(Counter), "key");
-            var currentValue = await context.CallEntityAsync<int>(entityId, "Get");
-            if (currentValue < 10)
-            {
+            //var currentValue = await context.CallEntityAsync<int>(entityId, "Get");
+            //if (currentValue < 10)
+            //{
                 // Asynchronous call which updates the value
                 context.SignalEntity(entityId, "Add", 1);
-            }
+            //}
             var finalValue= await context.CallEntityAsync<int>(entityId, "Get");
             //return $"{finalValue}";
             //return output;
