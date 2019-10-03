@@ -7,16 +7,20 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace DataPoints.Function {
     public static class CounterOrchestration {
       [FunctionName ("CounterOrchestration")]
-      public static async Task Run (
+      public static async Task<string> RunOrchestartor (
         [OrchestrationTrigger] IDurableOrchestrationContext context) {
-        var entityId = new EntityId (nameof (Entity), "myCounter2");
+        var entityId = new EntityId (nameof (Entity), "key");
        context.SignalEntity(entityId, "Add", 2);
         // Synchronous call to the entity which returns a value
-        var currentValue = await context.CallEntityAsync<int>(entityId, "Get");
+        var currentValue = await context.CallEntityAsync<int>(entityId, "Add",1);
+        var x=3;
+        return "xyz";
         // if (currentValue < 10) {
         //   // Asynchronous call which updates the value
         //   context.SignalEntity(entityId, "Add", 1);
@@ -27,9 +31,9 @@ namespace DataPoints.Function {
 
         [FunctionName ("Entity")]
         public static void Counter ([EntityTrigger] IDurableEntityContext ctx) {
-          var currentValue = ctx.GetState<int> ();
+                  var currentValue = ctx.GetState<int>();
 
-          switch (ctx.OperationName.ToLowerInvariant ()) {
+             switch (ctx.OperationName.ToLowerInvariant ()) {
             case "add":
               int amount = ctx.GetInput<int> ();
               currentValue += amount;
