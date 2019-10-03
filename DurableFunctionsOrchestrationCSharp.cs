@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace DataPoints.Function {
     public static class DurableFunctionsOrchestrationCSharp {
@@ -17,11 +18,11 @@ namespace DataPoints.Function {
             outputs.Add (await context.CallActivityAsync<string> ("DurableFunctionsOrchestrationCSharp_Hello", "Tokyo"));
             outputs.Add (await context.CallActivityAsync<string> ("DurableFunctionsOrchestrationCSharp_Hello", "Seattle"));
             outputs.Add (await context.CallActivityAsync<string> ("DurableFunctionsOrchestrationCSharp_Hello", "London"));
-            var entityId = new EntityId (nameof (Counter1), "myCounter1");
+            var entityId = new EntityId (nameof (CounterEntity), "myCounter1");
 
             // Synchronous call to the entity which returns a value
-           int currentValue = await context.CallEntityAsync<int> (entityId, "Get");
-          
+           
+          var currentValue=await context.CallEntityAsync<int>(entityId,"Get");
             if (currentValue < 10) {
                 // Asynchronous call which updates the value
             //  await context.CallEntityAsync<int>(entityId,"Add",1);
@@ -48,25 +49,20 @@ namespace DataPoints.Function {
 
             return starter.CreateCheckStatusResponse (req, instanceId);
         }
-
-        [FunctionName ("Counter1")]
-        public static void Counter1 ([EntityTrigger] IDurableEntityContext ctx) {
-            int currentValue = ctx.GetState<int> ();
-
-            switch (ctx.OperationName.ToLowerInvariant ()) {
-                case "add":
-                    int amount = ctx.GetInput<int> ();
-                    currentValue += amount;
-                    break;
-                case "reset":
-                    currentValue = 0;
-                    break;
-                case "get":
-                    ctx.Return (currentValue);
-                    break;
-            }
-
-            ctx.SetState (currentValue);
-        }
     }
+   public class CounterEntity
+{
+    [JsonProperty("value")]
+    public int CurrentValue { get; set; }
+
+    public void Add(int amount) => this.CurrentValue += amount;
+    
+    public void Reset() => this.CurrentValue = 0;
+    
+    public int Get() => this.CurrentValue;
+
+    [FunctionName(nameof(CounterEntity))]
+    public static Task Run([EntityTrigger] IDurableEntityContext ctx)
+        => ctx.DispatchAsync<CounterEntity>();
 }
+    }
