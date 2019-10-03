@@ -5,7 +5,10 @@
       "label": "clean",
       "command": "dotnet clean",
       "type": "shell",
-      "problemMatcher": "$msCompile"
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/test"
+      }
     },
     {
       "label": "build",
@@ -16,26 +19,35 @@
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": "$msCompile"
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/test"
+      }
     },
     {
       "label": "clean release",
       "command": "dotnet clean --configuration Release",
       "type": "shell",
-      "problemMatcher": "$msCompile"
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/test"
+      }
     },
     {
       "label": "publish",
       "command": "dotnet publish --configuration Release",
       "type": "shell",
       "dependsOn": "clean release",
-      "problemMatcher": "$msCompile"
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/test"
+      }
     },
     {
       "type": "func",
       "dependsOn": "build",
       "options": {
-        "cwd": "${workspaceFolder}/bin/Debug/netcoreapp2.1"
+        "cwd": "${workspaceFolder}/test/bin/Debug/netcoreapp2.1"
       },
       "command": "host start",
       "isBackground": true,

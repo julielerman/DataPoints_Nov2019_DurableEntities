@@ -2,3 +2,5 @@ DurableFunctionsOrchestrationCSharp_HttpStart: [GET,POST] http://localhost:7071/
 http://localhost:7071/api/CounterClientAdd?amount=2
 
 http://localhost:7071/api/CounterClientGet
+
+  HttpTrigger: [GET,POST] http://localhost:7071/api/HttpTrigger
